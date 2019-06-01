@@ -1,0 +1,7 @@
+.idea/
+src/__pycache__/
+src/yelp/alinea_review.txt
+src/yelp/eleven-madison-park_review.txt
+src/yelp/subway_review.txt
+src/yelp/tejano-gril_review.txt
+src/yelp/texas-roadhouse_review.txt
