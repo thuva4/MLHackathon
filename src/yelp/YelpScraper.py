@@ -2,7 +2,7 @@ import json
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-restaurant = 'texas-roadhouse'
+restaurant = 'subway'
 base_urls = []
 with open("{}.txt".format(restaurant), "r") as fp:
    line = fp.readline()
@@ -48,14 +48,14 @@ for index, base_url in enumerate(base_urls, start=0):
     if location_index == 0 or index >= location_index:
         f = open("{}_review.txt".format(restaurant), "a+")
         html = urlopen(base_url)
+        print(base_url)
         soup = BeautifulSoup(html, 'html.parser')
         limit = soup.find("div", {"class" : "page-of-pages arrange_unit arrange_unit--fill"})
         totalPage = int(limit.text.strip().split(' ')[3])
-        for i in range(start, totalPage + 1):
+        for i in range(start, totalPage):
             html = urlopen(base_url + "?start={}".format(i*20))
+            print(base_url + "?start={}".format(i*20))
             soup = BeautifulSoup(html, 'html.parser')
-            limit = soup.find("div", {"class": "page-of-pages arrange_unit arrange_unit--fill"})
-            totalPage = int(limit.text.strip().split(' ')[3])
             review_divs = soup.findAll("div", {"class": "review-content"})
             for div in review_divs:
                 f.write("{} : {}\n ".format(review_count, div.p.text))
