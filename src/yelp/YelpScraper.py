@@ -1,6 +1,7 @@
 import json
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import csv
 
 restaurant = 'subway'
 base_urls = []
@@ -46,7 +47,9 @@ except Exception as ex:
 
 for index, base_url in enumerate(base_urls, start=0):
     if location_index == 0 or index >= location_index:
-        f = open("{}_review.txt".format(restaurant), "a+")
+        text_file = open("{}_review.txt".format(restaurant), "a+")
+        csv_file = open('{}_review.csv'.format(restaurant), '+a')
+        print(base_url)
         html = urlopen(base_url)
         print(base_url)
         soup = BeautifulSoup(html, 'html.parser')
@@ -58,7 +61,11 @@ for index, base_url in enumerate(base_urls, start=0):
             soup = BeautifulSoup(html, 'html.parser')
             review_divs = soup.findAll("div", {"class": "review-content"})
             for div in review_divs:
-                f.write("{} : {}\n ".format(review_count, div.p.text))
+                star_rating = div.div.div.div['title'].split(' ')[0]
+                text_file.write("{} : {} \n ".format(review_count, div.p.text))
+                course = [review_count, div.p.text, star_rating]
+                writer = csv.writer(csv_file,  delimiter='|')
+                writer.writerow(course)
                 review_count += 1
             start_value = i+1
             recovery_object = {'location_index': index, 'review_count': review_count, 'start': start_value}
@@ -66,7 +73,8 @@ for index, base_url in enumerate(base_urls, start=0):
             fp.write(json.dumps(recovery_object))
             fp.close()
             print(recovery_object)
-        f.close()
+        text_file.close()
+        csv_file.close()
         start = 0
         next_index = index + 1
         recovery_object = {'location_index': next_index, 'review_count': review_count, 'start': start}
