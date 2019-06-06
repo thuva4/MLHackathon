@@ -3,7 +3,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import csv
 
-restaurant = 'subway'
+restaurant = 'eleven-madison-park'
 base_urls = []
 with open("{}.txt".format(restaurant), "r") as fp:
    line = fp.readline()
