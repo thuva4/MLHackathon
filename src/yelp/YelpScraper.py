@@ -3,7 +3,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import csv
 
-restaurant = 'eleven-madison-park'
+restaurant = 'hilton'
 base_urls = []
 with open("{}.txt".format(restaurant), "r") as fp:
    line = fp.readline()
@@ -62,8 +62,10 @@ for index, base_url in enumerate(base_urls, start=0):
             review_divs = soup.findAll("div", {"class": "review-content"})
             for div in review_divs:
                 star_rating = div.div.div.div['title'].split(' ')[0]
+                review_date = div.div.span.text.strip().replace('Updated review', '').strip()
+                print(review_date)
                 text_file.write("{} : {} \n ".format(review_count, div.p.text))
-                course = [review_count, div.p.text, star_rating]
+                course = [review_count, div.p.text, star_rating, review_date]
                 writer = csv.writer(csv_file,  delimiter='|')
                 writer.writerow(course)
                 review_count += 1
